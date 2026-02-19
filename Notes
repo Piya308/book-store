@@ -1,0 +1,60 @@
+management.endpoints.web.exposure.include=*
+//if you by mistakenly give more space "= *" it might throw error as Caused by: java.lang.IllegalArgumentException: 'value' must only contain valid chars
+
+
+#Actuators:
+Spring Boot Actuator is a built‑in module that gives you production‑ready monitoring and management tools for your application.
+In short:
+It exposes endpoints (like /actuator/health, /actuator/info, /actuator/metrics) that let you check the app’s health, environment, and performance.
+It helps with observability: you can see memory usage, request counts, database connectivity, and more.
+It supports integration with monitoring tools (Prometheus, Micrometer, etc.), so you can collect metrics automatically.
+You control which endpoints are visible using properties like:
+management.endpoints.web.exposure.include=health,info,metrics(exposes specific, if all ue *)
+
+#Git Specfic info in Actuator
+The git-commit-id-maven-plugin is configured to generate a git.properties file during the build. This file contains selected Git metadata (branch, commit ID, author, commit message, etc.), which Spring Boot Actuator automatically exposes through the /actuator/info endpoint.
+With this setup, whenever the application is built, the current Git information is embedded into the JAR and can be retrieved at runtime via Actuator.
+It always records the commit that was checked out when you ran the build (e.g., mvn package or mvn install).
+	<plugin>
+				<groupId>io.github.git-commit-id</groupId>
+				<artifactId>git-commit-id-maven-plugin</artifactId>
+				<executions><execution><goals<goal>revision</goal></goals></execution></executions>
+				<configuration>
+					<failOnNoGitDirectory>false</failOnNoGitDirectory>
+					<failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
+					<generateGitPropertiesFile>true</generateGitPropertiesFile>
+					<includeOnlyProperties>
+						<includeOnlyProperty>^git.branch$</includeOnlyProperty>
+						<includeOnlyProperty>^git.commit.id.abbrev$</includeOnlyProperty>
+						<includeOnlyProperty>^git.commit.user.name$</includeOnlyProperty>
+						<includeOnlyProperty>^git.commit.message.full$</includeOnlyProperty>
+					</includeOnlyProperties>
+				</configuration>
+			</plugin>
+
+{
+  "git": {
+    "branch": "master",
+    "commit": {
+      "id": "cf907ae",
+      "time": "2026-02-19T14:31:52Z"
+    }
+  },
+  "build": {
+    "artifact": "catalog-service",
+    "name": "catalog-service",
+    "time": "2026-02-19T14:46:40.872Z",
+    "version": "0.0.1-SNAPSHOT",
+    "group": "com.priyanka"
+  }
+}
+
+
+#Swagger-Open Api
+The project uses Springdoc OpenAPI Starter WebMVC UI (version 2.5.0) to integrate Swagger/OpenAPI with Spring Boot 3.x. This dependency automatically generates OpenAPI 3 specifications for all REST controllers and exposes them through an interactive Swagger UI. Developers can access the UI at (http://localhost:8081/swagger-ui/index.html) to explore and test endpoints without additional configuration. By using the starter, the application remains compatible with Spring Boot 3.x and Jakarta EE, avoiding issues caused by older Springdoc versions.
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+
