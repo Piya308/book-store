@@ -85,3 +85,28 @@ The Spotless Maven plugin is configured to automatically enforce consistent Java
             </executions>
         </plugin>
     </plugins>
+
+  #Flyway Migration Dependency
+  <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+  </dependency>
+
+Manages Schema Versions : Flyway tracks the state of your database schema using a versioning system. Each migration script (SQL or Java) is assigned a version number, and Flyway ensures they run in the correct order.
+Applies Migrations Automatically:  On application startup (e.g., in Spring Boot), Flyway scans for migration files in your project (usually under db/migration) and applies any that haven’t been executed yet.
+Ensures Consistency:  Prevents the same script from being executed multiple times. It records applied migrations in a special metadata table (flyway_schema_history).
+--> What it does
+Flyway is like Git for your database.
+It keeps track of changes (migrations) to your database schema (tables, columns, etc.).
+Each change is stored in a file with a version number (e.g., V1__create_table.sql, V2__add_data.sql).
+-->How It Works
+You put migration files in src/main/resources/db/migration.
+When your app starts, Flyway looks at those files.
+It checks a special table (flyway_schema_history) in your database to see which migrations have already been applied.
+If new ones exist, Flyway runs them in order and records them in the history table.
+-->Key Points
+File names must follow the convention:
+V<number>__description.sql (e.g., V1__create_products_table.sql).
+Wrongly named files are ignored silently.
+Once applied, migrations are tracked in flyway_schema_history
+**with Flyway, if you already inserted 20 rows into a table using one migration file and later want to add 10 more rows, you don’t edit the old file. Instead, you create a new migration file with the next version number (like V2__add_more_rows.sql). Flyway tracks migrations by file name and version, and once a migration is applied it’s recorded in the flyway_schema_history table. If you change an old file, Flyway won’t re-run it because it thinks it’s already applied, so the only way to apply new changes is to create a new file with a higher version number. This ensures every change is applied in order and consistently across all environments.
