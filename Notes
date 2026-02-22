@@ -110,3 +110,62 @@ V<number>__description.sql (e.g., V1__create_products_table.sql).
 Wrongly named files are ignored silently.
 Once applied, migrations are tracked in flyway_schema_history
 **with Flyway, if you already inserted 20 rows into a table using one migration file and later want to add 10 more rows, you don’t edit the old file. Instead, you create a new migration file with the next version number (like V2__add_more_rows.sql). Flyway tracks migrations by file name and version, and once a migration is applied it’s recorded in the flyway_schema_history table. If you change an old file, Flyway won’t re-run it because it thinks it’s already applied, so the only way to apply new changes is to create a new file with a higher version number. This ensures every change is applied in order and consistently across all environments.
+
+#Package Structures type of Project
+In Spring Boot (and Java projects generally), package organization is a big architectural choice. The three common styles are package by layer, package by feature, and package by component. Each has trade-offs in terms of clarity, scalability, and maintainability.
+📂 1. Package by Layer
+Structure: Group classes by technical role.
+Code
+com.example.project
+├── controller
+├── service
+├── repository
+├── model
+Pros:
+Easy to understand for beginners.
+Clear separation of responsibilities.
+Cons:
+As the project grows, related classes are scattered across different packages.
+Harder to navigate features (e.g., “Order” logic is split across multiple packages).
+
+📂 2. Package by Feature
+Structure: Group classes by business feature/domain.
+Code
+com.example.project
+├── order
+│   ├── OrderController
+│   ├── OrderService
+│   ├── OrderRepository
+│   └── OrderEntity
+├── customer
+│   ├── CustomerController
+│   ├── CustomerService
+│   ├── CustomerRepository
+│   └── CustomerEntity
+Pros:
+Keeps all code for a feature together.
+Easier to scale and maintain in large projects.
+Aligns with domain-driven design (DDD).
+Cons:
+Beginners may find it less intuitive.
+Requires discipline to keep features isolated.
+
+📂 3. Package by Component
+Structure: Group classes by reusable technical components (e.g., security, persistence, messaging).
+Code
+com.example.project
+├── security
+├── persistence
+├── messaging
+├── api
+Pros
+Good for cross-cutting concerns (like authentication, logging).
+Encourages modularity and reusability.
+Cons:
+Can mix technical and business concerns.
+Might overlap with package by layer if not carefully designed.
+✅ Which One to Use?
+Small projects: Package by layer is fine — simple and clear.
+Medium to large projects: Package by feature is usually recommended, because it scales better and keeps related code together.
+Specialized modules: Package by component works well for cross-cutting concerns or shared infrastructure.
+https://jshingler.github.io/blog/2025/10/25/package-by-feature-vs-clean-architecture/?form=MG0AV3&form=MG0AV3&utm_source=copilot.com
