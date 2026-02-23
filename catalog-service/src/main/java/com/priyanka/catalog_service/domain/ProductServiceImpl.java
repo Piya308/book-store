@@ -14,16 +14,15 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ApplicationProperties applicationProperties;
 
-    ProductServiceImpl(ProductRepository productRepository,
-    ApplicationProperties applicationProperties) {
+    ProductServiceImpl(ProductRepository productRepository, ApplicationProperties applicationProperties) {
         this.productRepository = productRepository;
         this.applicationProperties = applicationProperties;
     }
 
     @Override
-    public PagedResult<ProductDto> getProducts(int pageNo){
+    public PagedResult<ProductDto> getProducts(int pageNo) {
         Sort sort = Sort.by("name").ascending();
-        pageNo = pageNo <= 1 ? 0 : pageNo -1;
+        pageNo = pageNo <= 1 ? 0 : pageNo - 1;
         Pageable pageable = PageRequest.of(pageNo, 10, sort);
         Page<ProductDto> productPage = productRepository.findAll(pageable).map(ProductMapper::toProductDto);
         return new PagedResult<>(
@@ -34,7 +33,6 @@ public class ProductServiceImpl implements ProductService {
                 productPage.isFirst(),
                 productPage.isLast(),
                 productPage.hasNext(),
-                productPage.hasPrevious()
-        );
+                productPage.hasPrevious());
     }
 }
