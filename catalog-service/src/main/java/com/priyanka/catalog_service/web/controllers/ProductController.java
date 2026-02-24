@@ -14,8 +14,8 @@ public class ProductController {
 
     private final ProductService productService;
 
-    ProductController(ProductService productServce) {
-        this.productService = productServce;
+    ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping
