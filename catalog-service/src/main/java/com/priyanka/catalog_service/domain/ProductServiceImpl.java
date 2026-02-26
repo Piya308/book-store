@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 public class ProductServiceImpl implements ProductService {
@@ -23,7 +25,7 @@ public class ProductServiceImpl implements ProductService {
     public PagedResult<ProductDto> getProducts(int pageNo) {
         Sort sort = Sort.by("name").ascending();
         pageNo = pageNo <= 1 ? 0 : pageNo - 1;
-        Pageable pageable = PageRequest.of(pageNo, 10, sort);
+        Pageable pageable = PageRequest.of(pageNo, applicationProperties.pageSize(), sort);
         Page<ProductDto> productPage = productRepository.findAll(pageable).map(ProductMapper::toProductDto);
         return new PagedResult<>(
                 productPage.getContent(),
@@ -34,5 +36,10 @@ public class ProductServiceImpl implements ProductService {
                 productPage.isLast(),
                 productPage.hasNext(),
                 productPage.hasPrevious());
+    }
+
+    public Optional<ProductDto> getProductByCode(String code){
+        return productRepository.findByCode(code)
+                .map(ProductMapper :: toProductDto);
     }
 }
