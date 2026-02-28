@@ -13,12 +13,6 @@ import org.springframework.test.context.jdbc.Sql;
 
 @Sql("/test-data.sql")
 public class ProductControllerTest extends AbstractIT {
-
-    //    @Test
-    //    void shouldCreateProduct() {
-    //
-    //    }
-
     @Test
     void shouldReturnProducs() {
         given().contentType(ContentType.JSON) // 1. Build the request with JSON content type

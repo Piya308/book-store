@@ -17,9 +17,10 @@ import org.springframework.test.context.jdbc.Sql;
             "spring.datasource.url=jdbc:tc:postgresql:16-alpine:///db",
         })
 @Sql("/test-data.sql")
-@Import(
-        TestcontainersConfiguration
-                .class) // if testing only repository then dont use this with db container , there can be other
+//@Import(
+//        TestcontainersConfiguration
+//                .class)
+// if testing only repository then dont use this with db container , there can be other
 // containers such as rabbitmq
 public class ProductRepositoryTest {
 
