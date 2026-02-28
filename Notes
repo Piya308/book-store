@@ -169,3 +169,13 @@ Small projects: Package by layer is fine — simple and clear.
 Medium to large projects: Package by feature is usually recommended, because it scales better and keeps related code together.
 Specialized modules: Package by component works well for cross-cutting concerns or shared infrastructure.
 https://jshingler.github.io/blog/2025/10/25/package-by-feature-vs-clean-architecture/?form=MG0AV3&form=MG0AV3&utm_source=copilot.com
+
+#build docker image
+./mvnw spring-boot:build-image -DskipTests
+./mvnw → Runs the Maven Wrapper, ensuring you use the project’s configured Maven version without needing Maven installed globally.
+spring-boot:build-image → Invokes the Spring Boot Maven Plugin’s build-image goal.
+This uses Cloud Native Buildpacks (CNB) to package your Spring Boot application into an OCI-compliant container image (like a Docker image).
+It automatically handles dependencies, JDK, and runtime setup.
+-DskipTests → Skips running unit/integration tests during the build process, speeding up image creation.
+So essentially, this command builds a ready-to-run container image of your Spring Boot app without executing tests
+
