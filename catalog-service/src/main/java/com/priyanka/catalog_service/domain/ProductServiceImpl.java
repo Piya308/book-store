@@ -1,13 +1,12 @@
 package com.priyanka.catalog_service.domain;
 
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -38,8 +37,7 @@ public class ProductServiceImpl implements ProductService {
                 productPage.hasPrevious());
     }
 
-    public Optional<ProductDto> getProductByCode(String code){
-        return productRepository.findByCode(code)
-                .map(ProductMapper :: toProductDto);
+    public Optional<ProductDto> getProductByCode(String code) {
+        return productRepository.findByCode(code).map(ProductMapper::toProductDto);
     }
 }

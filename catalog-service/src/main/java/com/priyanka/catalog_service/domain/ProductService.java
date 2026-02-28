@@ -7,5 +7,4 @@ public interface ProductService {
     PagedResult<ProductDto> getProducts(int pageNo);
 
     Optional<ProductDto> getProductByCode(String code);
-
 }

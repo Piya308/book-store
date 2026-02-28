@@ -1,15 +1,14 @@
 package com.priyanka.catalog_service.exception;
 
 import com.priyanka.catalog_service.domain.ProductNotFoundException;
+import java.net.URI;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import java.net.URI;
-import java.time.Instant;
-import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -18,7 +17,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private static final String SERVICE_NAME = "catalog-service";
 
     @ExceptionHandler(ProductNotFoundException.class)
-    ProblemDetail  handleProductNotFoundException(ProductNotFoundException e){
+    ProblemDetail handleProductNotFoundException(ProductNotFoundException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
         problemDetail.setTitle("Product not found");
         problemDetail.setType(NOT_FOUND_TYPE);
@@ -28,9 +27,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
-
     @ExceptionHandler(Exception.class)
-    ProblemDetail  handleGenericUnhandledException(Exception e){
+    ProblemDetail handleGenericUnhandledException(Exception e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
         problemDetail.setTitle("Internal Server Error");
         problemDetail.setType(ISE_FOUND_TYPE);
@@ -39,5 +37,4 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         problemDetail.setProperty("timestamp", Instant.now());
         return problemDetail;
     }
-
 }
