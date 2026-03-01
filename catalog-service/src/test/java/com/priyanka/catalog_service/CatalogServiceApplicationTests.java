@@ -7,4 +7,3 @@ class CatalogServiceApplicationTests extends AbstractIT {
     @Test
     void contextLoads() {}
 }
-

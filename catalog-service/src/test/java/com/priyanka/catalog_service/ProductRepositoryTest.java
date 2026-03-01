@@ -8,7 +8,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest(
@@ -17,7 +16,7 @@ import org.springframework.test.context.jdbc.Sql;
             "spring.datasource.url=jdbc:tc:postgresql:16-alpine:///db",
         })
 @Sql("/test-data.sql")
-//@Import(
+// @Import(
 //        TestcontainersConfiguration
 //                .class)
 // if testing only repository then dont use this with db container , there can be other
