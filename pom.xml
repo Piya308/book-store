@@ -27,7 +27,7 @@
             <configuration>
                 <java>
                     <importOrder />
-                    <removeUnusedImports />
+                    <removeUnusedImports>
                     <palantirJavaFormat>
                         <version>2.35.0</version>
                     </palantirJavaFormat>
