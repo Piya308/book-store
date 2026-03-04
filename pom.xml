@@ -17,6 +17,7 @@
 
     <modules>
         <module>catalog-service</module>
+        <module>order-service</module>
     </modules>
 <build>
     <plugins>
@@ -27,7 +28,7 @@
             <configuration>
                 <java>
                     <importOrder />
-                    <removeUnusedImports>
+                    <removeUnusedImports />
                     <palantirJavaFormat>
                         <version>2.35.0</version>
                     </palantirJavaFormat>
