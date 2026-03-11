@@ -18,9 +18,10 @@ services:
       resources:
         limits:
           memory: 500m
-  order-db:
+
+  orders-db:
     image: postgres:16-alpine
-    container_name: order-db
+    container_name: orders-db
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
