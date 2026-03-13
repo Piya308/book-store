@@ -56,3 +56,4 @@ services:
       resources:
         limits:
           memory: 500m
+
