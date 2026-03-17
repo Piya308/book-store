@@ -179,3 +179,4 @@ It automatically handles dependencies, JDK, and runtime setup.
 -DskipTests → Skips running unit/integration tests during the build process, speeding up image creation.
 So essentially, this command builds a ready-to-run container image of your Spring Boot app without executing tests
 
+Rabbit mq connection with springboot application
