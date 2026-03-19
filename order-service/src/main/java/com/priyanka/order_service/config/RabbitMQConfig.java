@@ -1,13 +1,10 @@
-package com.sivalabs.bookstore.orders.config;
+package com.priyanka.order_service.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.priyanka.order_service.domain.ApplicationProperties;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.QueueBuilder;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 class RabbitMQConfig {
+
     private final ApplicationProperties properties;
 
     RabbitMQConfig(ApplicationProperties properties) {
@@ -22,53 +20,76 @@ class RabbitMQConfig {
     }
 
     @Bean
-    DirectExchange exchange() {
-        return new DirectExchange(properties.orderEventsExchange());
+    public AmqpAdmin amqpAdmin(ConnectionFactory connectionFactory) {
+        return new RabbitAdmin(connectionFactory);
     }
 
     @Bean
-    Queue newOrdersQueue() {
-        return QueueBuilder.durable(properties.newOrdersQueue()).build();
+    DirectExchange exchange(AmqpAdmin admin) {
+        DirectExchange ex = new DirectExchange(properties.orderEventsExchange());
+        admin.declareExchange(ex);  // forces creation
+        return ex;
     }
 
     @Bean
-    Binding newOrdersQueueBinding() {
-        return BindingBuilder.bind(newOrdersQueue()).to(exchange()).with(properties.newOrdersQueue());
+    Queue newOrdersQueue(AmqpAdmin admin) {
+        Queue q = QueueBuilder.durable(properties.newOrdersQueue()).build();
+        admin.declareQueue(q);  // forces creation
+        return q;
     }
 
     @Bean
-    Queue deliveredOrdersQueue() {
-        return QueueBuilder.durable(properties.deliveredOrdersQueue()).build();
+    Binding newOrdersQueueBinding(AmqpAdmin admin, Queue newOrdersQueue, DirectExchange exchange) {
+        Binding b = BindingBuilder.bind(newOrdersQueue).to(exchange).with(properties.newOrdersQueue());
+        admin.declareBinding(b);  // forces creation
+        return b;
     }
 
     @Bean
-    Binding deliveredOrdersQueueBinding() {
-        return BindingBuilder.bind(deliveredOrdersQueue()).to(exchange()).with(properties.deliveredOrdersQueue());
+    Queue deliveredOrdersQueue(AmqpAdmin admin) {
+        Queue q = QueueBuilder.durable(properties.deliveredOrdersQueue()).build();
+        admin.declareQueue(q);
+        return q;
     }
 
     @Bean
-    Queue cancelledOrdersQueue() {
-        return QueueBuilder.durable(properties.cancelledOrdersQueue()).build();
+    Binding deliveredOrdersQueueBinding(AmqpAdmin admin, Queue deliveredOrdersQueue, DirectExchange exchange) {
+        Binding b = BindingBuilder.bind(deliveredOrdersQueue).to(exchange).with(properties.deliveredOrdersQueue());
+        admin.declareBinding(b);
+        return b;
     }
 
     @Bean
-    Binding cancelledOrdersQueueBinding() {
-        return BindingBuilder.bind(cancelledOrdersQueue()).to(exchange()).with(properties.cancelledOrdersQueue());
+    Queue cancelledOrdersQueue(AmqpAdmin admin) {
+        Queue q = QueueBuilder.durable(properties.cancelledOrdersQueue()).build();
+        admin.declareQueue(q);
+        return q;
     }
 
     @Bean
-    Queue errorOrdersQueue() {
-        return QueueBuilder.durable(properties.errorOrdersQueue()).build();
+    Binding cancelledOrdersQueueBinding(AmqpAdmin admin, Queue cancelledOrdersQueue, DirectExchange exchange) {
+        Binding b = BindingBuilder.bind(cancelledOrdersQueue).to(exchange).with(properties.cancelledOrdersQueue());
+        admin.declareBinding(b);
+        return b;
     }
 
     @Bean
-    Binding errorOrdersQueueBinding() {
-        return BindingBuilder.bind(errorOrdersQueue()).to(exchange()).with(properties.errorOrdersQueue());
+    Queue errorOrdersQueue(AmqpAdmin admin) {
+        Queue q = QueueBuilder.durable(properties.errorOrdersQueue()).build();
+        admin.declareQueue(q);
+        return q;
+    }
+
+    @Bean
+    Binding errorOrdersQueueBinding(AmqpAdmin admin, Queue errorOrdersQueue, DirectExchange exchange) {
+        Binding b = BindingBuilder.bind(errorOrdersQueue).to(exchange).with(properties.errorOrdersQueue());
+        admin.declareBinding(b);
+        return b;
     }
 
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, ObjectMapper objectMapper) {
-        final var rabbitTemplate = new RabbitTemplate(connectionFactory);
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(jacksonConverter(objectMapper));
         return rabbitTemplate;
     }
