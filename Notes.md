@@ -2,7 +2,7 @@ management.endpoints.web.exposure.include=*
 //if you by mistakenly give more space "= *" it might throw error as Caused by: java.lang.IllegalArgumentException: 'value' must only contain valid chars
 
 
-#Actuators:
+**#Actuators:**
 Spring Boot Actuator is a built‑in module that gives you production‑ready monitoring and management tools for your application.
 In short:
 It exposes endpoints (like /actuator/health, /actuator/info, /actuator/metrics) that let you check the app’s health, environment, and performance.
@@ -11,109 +11,114 @@ It supports integration with monitoring tools (Prometheus, Micrometer, etc.), so
 You control which endpoints are visible using properties like:
 management.endpoints.web.exposure.include=health,info,metrics(exposes specific, if all ue *)
 
-#Git Specfic info in Actuator
+#### #Git Specfic info in Actuator
 The git-commit-id-maven-plugin is configured to generate a git.properties file during the build. This file contains selected Git metadata (branch, commit ID, author, commit message, etc.), which Spring Boot Actuator automatically exposes through the /actuator/info endpoint.
 With this setup, whenever the application is built, the current Git information is embedded into the JAR and can be retrieved at runtime via Actuator.
 It always records the commit that was checked out when you ran the build (e.g., mvn package or mvn install).
-	<plugin>
-				<groupId>io.github.git-commit-id</groupId>
-				<artifactId>git-commit-id-maven-plugin</artifactId>
-				<executions><execution><goals<goal>revision</goal></goals></execution></executions>
-				<configuration>
-					<failOnNoGitDirectory>false</failOnNoGitDirectory>
-					<failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
-					<generateGitPropertiesFile>true</generateGitPropertiesFile>
-					<includeOnlyProperties>
-						<includeOnlyProperty>^git.branch$</includeOnlyProperty>
-						<includeOnlyProperty>^git.commit.id.abbrev$</includeOnlyProperty>
-						<includeOnlyProperty>^git.commit.user.name$</includeOnlyProperty>
-						<includeOnlyProperty>^git.commit.message.full$</includeOnlyProperty>
-					</includeOnlyProperties>
-				</configuration>
-			</plugin>
-
+`<plugin>
+<groupId>io.github.git-commit-id</groupId>
+<artifactId>git-commit-id-maven-plugin</artifactId>
+<executions><execution><goals<goal>revision</goal></goals></execution></executions>
+<configuration>
+<failOnNoGitDirectory>false</failOnNoGitDirectory>
+<failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
+<generateGitPropertiesFile>true</generateGitPropertiesFile>
+<includeOnlyProperties>
+<includeOnlyProperty>^git.branch$</includeOnlyProperty>
+<includeOnlyProperty>^git.commit.id.abbrev$</includeOnlyProperty>
+<includeOnlyProperty>^git.commit.user.name$</includeOnlyProperty>
+<includeOnlyProperty>^git.commit.message.full$</includeOnlyProperty>
+</includeOnlyProperties>
+</configuration>
+</plugin>
 {
-  "git": {
-    "branch": "master",
-    "commit": {
-      "id": "cf907ae",
-      "time": "2026-02-19T14:31:52Z"
-    }
-  },
-  "build": {
-    "artifact": "catalog-service",
-    "name": "catalog-service",
-    "time": "2026-02-19T14:46:40.872Z",
-    "version": "0.0.1-SNAPSHOT",
-    "group": "com.priyanka"
-  }
+"git": {
+"branch": "master",
+"commit": {
+"id": "cf907ae",
+"time": "2026-02-19T14:31:52Z"
 }
+},
+"build": {
+"artifact": "catalog-service",
+"name": "catalog-service",
+"time": "2026-02-19T14:46:40.872Z",
+"version": "0.0.1-SNAPSHOT",
+"group": "com.priyanka"
+}
+}`
 
 
-#Swagger-Open Api
-The project uses Springdoc OpenAPI Starter WebMVC UI (version 2.5.0) to integrate Swagger/OpenAPI with Spring Boot 3.x. This dependency automatically generates OpenAPI 3 specifications for all REST controllers and exposes them through an interactive Swagger UI. Developers can access the UI at (http://localhost:8081/swagger-ui/index.html) to explore and test endpoints without additional configuration. By using the starter, the application remains compatible with Spring Boot 3.x and Jakarta EE, avoiding issues caused by older Springdoc versions.
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>2.5.0</version>
-		</dependency>
+#### #Swagger-Open Api
 
-#Java code formatting Dependency
-The Spotless Maven plugin is configured to automatically enforce consistent Java code style during the build process. It removes unused imports, applies Palantir’s Java formatter, and ensures annotations and import order are standardized. By binding the plugin to the compile phase, every build guarantees clean, well‑formatted code. Developers can also run spotless:apply to reformat code or spotless:check to validate formatting, making Spotless a powerful tool for maintaining code quality and consistency across the team.
-    <plugins>
-        <plugin>
-            <groupId>com.diffplug.spotless</groupId>
-            <artifactId>spotless-maven-plugin</artifactId>
-            <version>2.45.0</version>
-            <configuration>
-                <java>
-                    <importOrder />
-                    <removeUnusedImports />
-                    <palantirJavaFormat>
-                        <version>2.35.0</version>
-                    </palantirJavaFormat>
-                    <formatAnnotations />
-                </java>
-            </configuration>
-            <executions>
-                <execution>
-                    <phase>compile</phase>
-                    <goals>
-                        <goal>apply</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
+- The project uses Springdoc OpenAPI Starter WebMVC UI (version 2.5.0) to integrate Swagger/OpenAPI with Spring Boot 3.x.
+- This dependency automatically generates OpenAPI 3 specifications for all REST controllers and exposes them through an interactive Swagger UI. Developers can access the UI at (http://localhost:8081/swagger-ui/index.html) to explore and test endpoints without additional configuration.
+- By using the starter, the application remains compatible with Spring Boot 3.x and Jakarta EE, avoiding issues caused by older Springdoc versions.
+`<dependency>
+<groupId>org.springdoc</groupId>
+<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+<version>2.5.0</version>
+</dependency>`
 
-  #Flyway Migration Dependency
-  <dependency>
-      <groupId>org.flywaydb</groupId>
-      <artifactId>flyway-core</artifactId>
-  </dependency>
+#### #Java code formatting Dependency
+- The Spotless Maven plugin is configured to automatically enforce consistent Java code style during the build process.
+- It removes unused imports, applies Palantir’s Java formatter, and ensures annotations and import order are standardized. By binding the plugin to the compile phase, every build guarantees clean, well‑formatted code.
+- Developers can also run spotless:apply to reformat code or spotless:check to validate formatting, making Spotless a powerful tool for maintaining code quality and consistency across the team.
+`<plugins>
+<plugin>
+<groupId>com.diffplug.spotless</groupId>
+<artifactId>spotless-maven-plugin</artifactId>
+<version>2.45.0</version>
+<configuration>
+<java>
+<importOrder />
+<removeUnusedImports />
+<palantirJavaFormat>
+<version>2.35.0</version>
+</palantirJavaFormat>
+<formatAnnotations />
+</java>
+</configuration>
+<executions>
+<execution>
+<phase>compile</phase>
+<goals>
+<goal>apply</goal>
+</goals>
+</execution>
+</executions>
+</plugin>
+</plugins>`
 
-Manages Schema Versions : Flyway tracks the state of your database schema using a versioning system. Each migration script (SQL or Java) is assigned a version number, and Flyway ensures they run in the correct order.
+### **#Flyway Migration Dependency**
+
+<dependency>
+<groupId>org.flywaydb</groupId>
+<artifactId>flyway-core</artifactId>
+</dependency>
+
+- Manages Schema Versions : Flyway tracks the state of your database schema using a versioning system. Each migration script (SQL or Java) is assigned a version number, and Flyway ensures they run in the correct order.
 Applies Migrations Automatically:  On application startup (e.g., in Spring Boot), Flyway scans for migration files in your project (usually under db/migration) and applies any that haven’t been executed yet.
 Ensures Consistency:  Prevents the same script from being executed multiple times. It records applied migrations in a special metadata table (flyway_schema_history).
---> What it does
+- **What it does:**
 Flyway is like Git for your database.
 It keeps track of changes (migrations) to your database schema (tables, columns, etc.).
 Each change is stored in a file with a version number (e.g., V1__create_table.sql, V2__add_data.sql).
--->How It Works
+- **How It Works**
 You put migration files in src/main/resources/db/migration.
 When your app starts, Flyway looks at those files.
 It checks a special table (flyway_schema_history) in your database to see which migrations have already been applied.
 If new ones exist, Flyway runs them in order and records them in the history table.
--->Key Points
+- **Key Points**
 File names must follow the convention:
 V<number>__description.sql (e.g., V1__create_products_table.sql).
 Wrongly named files are ignored silently.
 Once applied, migrations are tracked in flyway_schema_history
 **with Flyway, if you already inserted 20 rows into a table using one migration file and later want to add 10 more rows, you don’t edit the old file. Instead, you create a new migration file with the next version number (like V2__add_more_rows.sql). Flyway tracks migrations by file name and version, and once a migration is applied it’s recorded in the flyway_schema_history table. If you change an old file, Flyway won’t re-run it because it thinks it’s already applied, so the only way to apply new changes is to create a new file with a higher version number. This ensures every change is applied in order and consistently across all environments.
 
-#Package Structures type of Project
+**#Package Structures type of Project**
 In Spring Boot (and Java projects generally), package organization is a big architectural choice. The three common styles are package by layer, package by feature, and package by component. Each has trade-offs in terms of clarity, scalability, and maintainability.
-📂 1. Package by Layer
+**📂 1. Package by Layer**
 Structure: Group classes by technical role.
 Code
 com.example.project
@@ -128,7 +133,7 @@ Cons:
 As the project grows, related classes are scattered across different packages.
 Harder to navigate features (e.g., “Order” logic is split across multiple packages).
 
-📂 2. Package by Feature
+**📂 2. Package by Feature**
 Structure: Group classes by business feature/domain.
 Code
 com.example.project
@@ -150,7 +155,7 @@ Cons:
 Beginners may find it less intuitive.
 Requires discipline to keep features isolated.
 
-📂 3. Package by Component
+**📂 3. Package by Component**
 Structure: Group classes by reusable technical components (e.g., security, persistence, messaging).
 Code
 com.example.project
@@ -170,68 +175,68 @@ Medium to large projects: Package by feature is usually recommended, because it 
 Specialized modules: Package by component works well for cross-cutting concerns or shared infrastructure.
 https://jshingler.github.io/blog/2025/10/25/package-by-feature-vs-clean-architecture/?form=MG0AV3&form=MG0AV3&utm_source=copilot.com
 
-#build docker image
-./mvnw spring-boot:build-image -DskipTests
-./mvnw → Runs the Maven Wrapper, ensuring you use the project’s configured Maven version without needing Maven installed globally.
+**#build docker image**
+- ./mvnw spring-boot:build-image -DskipTests
+- ./mvnw → Runs the Maven Wrapper, ensuring you use the project’s configured Maven version without needing Maven installed globally.
 spring-boot:build-image → Invokes the Spring Boot Maven Plugin’s build-image goal.
-This uses Cloud Native Buildpacks (CNB) to package your Spring Boot application into an OCI-compliant container image (like a Docker image).
-It automatically handles dependencies, JDK, and runtime setup.
+- This uses Cloud Native Buildpacks (CNB) to package your Spring Boot application into an OCI-compliant container image (like a Docker image).
+- It automatically handles dependencies, JDK, and runtime setup.
 -DskipTests → Skips running unit/integration tests during the build process, speeding up image creation.
-So essentially, this command builds a ready-to-run container image of your Spring Boot app without executing tests
+- So essentially, this command builds a ready-to-run container image of your Spring Boot app without executing tests
 
-#What is RabbitMQ?(Producer → Exchange → Queue → Consumer)
--RabbitMQ is a message broker.
--A software that lets different parts of a system talk to each other by sending messages, without being directly connected.
+**#What is RabbitMQ?(Producer → Exchange → Queue → Consumer)**
+- RabbitMQ is a message broker.
+- A software that lets different parts of a system talk to each other by sending messages, without being directly connected.
 🧠 Why do we need it?
--Instead of this:(Service A directly calls Service B ❌ (tight coupling, can fail easily))
--We do this:(Service A → sends message to RabbitMQ → Service B reads it later ✅)
+- Instead of this:(Service A directly calls Service B ❌ (tight coupling, can fail easily))
+- We do this:(Service A → sends message to RabbitMQ → Service B reads it later ✅)
 ✔ Decouples systems
 ✔ Handles high load
 ✔ Works asynchronously (no waiting)
 
-⚙️ Core Components of RM
+**⚙️ Core Components of RM**
 1. Producer
-Application that publishes messages
-Uses a protocol like AMQP
-Producer → send(message)
+   Application that publishes messages
+   Uses a protocol like AMQP
+   Producer → send(message)
 2. Exchange
-First point that receives messages
-Responsible for routing
-Doesn’t store messages
-Think: routing logic
+   First point that receives messages
+   Responsible for routing
+   Doesn’t store messages
+   Think: routing logic
 3. Queue
-Stores messages in memory or disk
-Messages stay until a consumer processes them
-Queue = buffer (FIFO by default)
+   Stores messages in memory or disk
+   Messages stay until a consumer processes them
+   Queue = buffer (FIFO by default)
 4. Binding
-Rule that connects Exchange → Queue
-Defines how messages flow
+   Rule that connects Exchange → Queue
+   Defines how messages flow
 5. Consumer
-Application that reads messages from queue
-Processes them (e.g., send email, process order)
+   Application that reads messages from queue
+   Processes them (e.g., send email, process order)
 
 🔀 Exchange Types
 1. Direct Exchange
-Routes using exact routing key match, routing_key = "order.created"
+   Routes using exact routing key match, routing_key = "order.created"
 2. Topic Exchange
-Uses pattern matching, order.*  → matches order.created, order.updated
+   Uses pattern matching, order.*  → matches order.created, order.updated
 3. Fanout Exchange
-Ignores routing key, Sends message to ALL bound queues
+   Ignores routing key, Sends message to ALL bound queues
 
-#Rabbit mq connection with springboot application
-1.Add dependency
+**#Rabbit mq connection with springboot application**
+1. Add dependency
 <dependency><groupId>org.springframework.boot</groupId>
 <artifactId>spring-boot-starter-amqp</artifactId></dependency>
-2.configure in app.prop
+2. configure in app.prop
 spring.rabbitmq.host=localhost
 spring.rabbitmq.port=5672
 spring.rabbitmq.username=guest
 spring.rabbitmq.password=guest
-3.Create Queue + Exchange + Binding(in RabbitMqConfiguration file with @Configuration Annotation)
-4.Send message (Producer)
+3. Create Queue + Exchange + Binding(in RabbitMqConfiguration file with @Configuration Annotation)
+4. Send message (Producer)
 rabbitTemplate.convertAndSend("ex", "key", "Hello");
-5.Receive message (Consumer)
+5. Receive message (Consumer)
 @RabbitListener(queues = "q")
 public void listen(String msg) {
-  System.out.println(msg);
+System.out.println(msg);
 }
