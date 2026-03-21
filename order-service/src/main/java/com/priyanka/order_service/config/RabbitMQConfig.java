@@ -1,7 +1,7 @@
 package com.priyanka.order_service.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.priyanka.order_service.domain.ApplicationProperties;
+import com.priyanka.order_service.ApplicationProperties;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -27,21 +27,21 @@ class RabbitMQConfig {
     @Bean
     DirectExchange exchange(AmqpAdmin admin) {
         DirectExchange ex = new DirectExchange(properties.orderEventsExchange());
-        admin.declareExchange(ex);  // forces creation
+        admin.declareExchange(ex);  
         return ex;
     }
 
     @Bean
     Queue newOrdersQueue(AmqpAdmin admin) {
         Queue q = QueueBuilder.durable(properties.newOrdersQueue()).build();
-        admin.declareQueue(q);  // forces creation
+        admin.declareQueue(q);  
         return q;
     }
 
     @Bean
     Binding newOrdersQueueBinding(AmqpAdmin admin, Queue newOrdersQueue, DirectExchange exchange) {
         Binding b = BindingBuilder.bind(newOrdersQueue).to(exchange).with(properties.newOrdersQueue());
-        admin.declareBinding(b);  // forces creation
+        admin.declareBinding(b);  
         return b;
     }
 
