@@ -235,3 +235,106 @@ rabbitTemplate.convertAndSend("ex", "key", "Hello");
 public void listen(String msg) {
   System.out.println(msg);
 }
+
+
+**🔹 What is @Embeddable?**
+- @Embeddable is a JPA annotation used to define a class whose fields are not stored in a separate table, but instead are included inside another entity’s table.
+- It represents a value object (no identity of its own).
+
+**🔹 What is @Embedded?**
+- @Embedded is used inside an entity to include an embeddable class.
+- It tells JPA:“Take all fields of this class and store them inside this entity.”
+
+**@AttributeOverride** → It is used along with @Embedded to customize how the fields of an @Embeddable class are mapped to database columns.
+
+**Example**
+
+##### **Step1**
+   `@Embeddable
+     public class Address {
+       private String addressLine1;
+       private String city;
+       private String state;
+   }`
+
+
+#### Step2
+@Entity
+public class User {
+
+    @Id
+    private Long id;
+
+    // No override → default column names
+    @Embedded
+    private Address homeAddress;
+    // With override → custom column names
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "addressLine1", column = @Column(name = "work_address_line1")),
+        @AttributeOverride(name = "city", column = @Column(name = "work_city")),
+        @AttributeOverride(name = "state", column = @Column(name = "work_state"))
+    })
+    private Address workAddress;
+}
+
+Step 3: What JPA Creates in Database
+`Only ONE table: user
+
+user - table field
+* id
+* addressLine1        → homeAddress.addressLine1
+* city                → homeAddress.city
+* state               → homeAddress.state
+* work_address_line1  → workAddress.addressLine1
+* work_city           → workAddress.city
+* work_state          → workAddress.state`
+
+#### **What is an Aggregate Root?**
+- An Aggregate Root is a special entity that acts as the “main entry point” for a group of related objects (called an aggregate) in your domain model.
+
+`Order order = entityManager.find(Order.class, 1L); // ✅ aggregated root
+  OrderItem item = entityManager.find(OrderItem.class, 1L); // ❌ ideally, access through Order part of aggregation(order)`
+
+
+ ### **list of which testing annotations to use for each layer in UNIT TEST** in a Spring Boot project:
+
+- **Controller layer**
+   - `@WebMvcTest` → Loads only the web layer (controllers, Jackson, `@ControllerAdvice`).
+   - Use with `MockMvc` and `@MockBean` for service dependencies.
+
+- **Service layer**
+   - `@ExtendWith(MockitoExtension.class)` (JUnit 5) → Pure unit tests with mocks, no Spring context.
+   - `@InjectMocks` + `@Mock` → Test business logic in isolation.
+   - Optionally `@SpringBootTest(classes = {YourService.class})` if you want Spring context but mock dependencies.
+
+- **Repository layer**
+   - `@DataJpaTest` → Loads JPA, Hibernate, and an in-memory DB (H2 by default).
+   - Great for testing repository queries and entity mappings.
+
+- **Integration tests (end-to-end)**
+   - `@SpringBootTest` → Loads the full application context.
+   - Combine with `@AutoConfigureMockMvc` for HTTP-level testing without starting a real server.
+   - Use when you want to test controller → service → repository flow together.
+
+- **Slice tests (specific parts of the app)**
+   - `@JsonTest` → For testing JSON serialization/deserialization.
+   - `@RestClientTest` → For testing REST clients (e.g., `RestTemplate`, `WebClient`).
+   - `@JdbcTest` → For testing JDBC-based repositories.
+
+### **What Instancio Is**
+- Instancio helps you automatically create test objects with populated fields, instead of manually building them.
+- It’s especially useful in unit/integration tests when you need realistic but random data for entities, DTOs, etc
+- 		<dependency>
+  		<groupId>org.instancio</groupId>
+  		<artifactId>instancio-junit</artifactId>
+  		<version>${instancio.version}</version>
+  		<scope>test</scope></dependency>
+- Instancio.of(OrderEntity.class) → tells Instancio to create an OrderEntity.
+- .set(field(...), value) → overrides the generated value for that field.
+- .create() → returns the final object instance.
+- OrderEntity order = Instancio.of(OrderEntity.class)
+  .set(field(OrderEntity::getOrderNumber), "ORD-123")
+  .set(field(OrderEntity::getStatus), OrderStatus.CREATED)
+  .create();
+
