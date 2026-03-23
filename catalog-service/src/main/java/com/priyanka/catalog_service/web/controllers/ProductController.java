@@ -7,6 +7,8 @@ import com.priyanka.catalog_service.domain.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static java.lang.Thread.sleep;
+
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -24,9 +26,18 @@ public class ProductController {
 
     @GetMapping("/{code}")
     ResponseEntity<ProductDto> getProductByCode(@PathVariable String code) {
+//        sleep();
         return productService
                 .getProductByCode(code)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> ProductNotFoundException.createWithCode(code));
+    }
+
+    void sleep(){
+        try{
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

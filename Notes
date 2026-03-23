@@ -338,3 +338,13 @@ user - table field
   .set(field(OrderEntity::getStatus), OrderStatus.CREATED)
   .create();
 
+### Resilience4j? (https://resilience4j.readme.io/docs/getting-started)
+Resilience4j is a lightweight fault tolerance library designed for Java 8 and above, offering **several resilience patterns like**:
+1. **Retry**: Automatically re‑invokes a failed operation a set number of times before giving up. Useful for transient errors (e.g., network hiccups).
+2. **Circuit Breaker:** Prevents repeated calls to a failing service by “opening” the circuit after a threshold of failures. Once open, calls fail fast until the service recovers.
+3. **Rate Limiter:** Controls how many requests can be made in a given time window, protecting downstream services from overload.
+4. **Bulkhead**: Limits concurrent calls to a service, isolating failures so they don’t cascade across the system.
+5. **Time Limiter**: Sets a maximum duration for a call; if exceeded, the call is aborted.
+6. **Fallbacks** → graceful degradation
+Resilience tools (like retry, circuit breaker, timeout, etc.) each solve different problems.
+The real power comes from combining them correctly.
