@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.wiremock.integrations.testcontainers.WireMockContainer;
 
 import java.math.BigDecimal;
@@ -28,6 +30,10 @@ public abstract class AbstractIT {
         configureFor(wiremockServer.getHost(), wiremockServer.getPort());
     }
 
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("orders.catalog-service-url", wiremockServer::getBaseUrl);
+    }
 
     @BeforeEach
     void setUp() {
