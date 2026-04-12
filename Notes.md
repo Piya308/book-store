@@ -352,3 +352,34 @@ Resilience4j is a lightweight fault tolerance library designed for Java 8 and ab
 6. **Fallbacks** → graceful degradation
 Resilience tools (like retry, circuit breaker, timeout, etc.) each solve different problems.
 The real power comes from combining them correctly.
+
+### Outbox Pattern
+The Outbox Pattern is a design pattern that ensures reliable event delivery by **writing events to a dedicated database** table as part of the same transaction as the business data, and then publishing them asynchronously.  
+**Problem**:
+`save(order);
+publishEvent();`
+
+And we saw the real issues:
+* ❌ Event sent but DB commit fails
+* ❌ DB saved but event not sent (crash / broker failure)
+* ❌ No retry if publishing fails   
+Database and event publishing are NOT atomic.
+
+**Solution**:
+👉 It removes direct event publishing from your main flow.  
+👉 And makes event storage part of the same DB transaction.  
+`save(order);
+saveEventToOutbox(event);`
+
+When to Use It
+
+**Use the Outbox Pattern when:**  
+You’re building microservices
+You rely on event-driven communication
+You need guaranteed message delivery.
+
+Outbox → “Event will not be lost”  
+Inbox → “Event will not be processed twice”  
+Saga → “Multi-step operations stay consistent”
+
+
