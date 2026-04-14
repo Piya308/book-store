@@ -28,7 +28,17 @@ project step-by-step
 27. published events from order service to message broker
 28. consumed events in other services for processing
 29. wrote test cases for order controller
-30. verified end-to-end workflow between catalog and order services
+30. verified end-to-end workflow between catalog and order services. 
+31. Receive request → validate → save order in DB. 
+32. Create OrderCreatedEvent → store in order_events table (same transaction). 
+33. Transaction commits → ensures order + event saved together. 
+34. Scheduler fetches pending events → converts payload → publishes to RabbitMQ → marks/deletes event. 
+35. Consumers receive messages → must handle duplicates using unique eventId. 
+36. Another scheduler picks NEW orders → checks delivery eligibility. 
+37. Update status (DELIVERED / CANCELLED / ERROR) → create corresponding event. 
+38. Save new events again in order_events table (Outbox Pattern). 
+39. Publisher job sends these events to RabbitMQ. 
+40. Multiple instances run → ShedLock ensures only one executes jobs at a time.
 
 ### Docker Testcontainers Failing
 **Issue:** Integration tests failed even though Docker images were running. APIs worked fine.
