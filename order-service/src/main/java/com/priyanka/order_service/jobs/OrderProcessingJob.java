@@ -21,10 +21,10 @@ class OrderProcessingJob {
     }
 
     @Scheduled(cron = "${orders.new-orders-job-cron}")
-    @SchedulerLock(name = "processNewOrders")
+//    @SchedulerLock(name = "processNewOrders")
     public void processNewOrders() {
-        LockAssert.assertLocked();
+//        LockAssert.assertLocked();
         log.info("Processing new orders at {}", Instant.now());
-//        orderService.processNewOrders();
+        orderService.processNewOrders();
     }
 }

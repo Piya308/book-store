@@ -21,9 +21,9 @@ class OrderEventsPublishingJob {
     }
 
     @Scheduled(cron = "${orders.publish-order-events-job-cron}")
-    @SchedulerLock(name = "publishOrderEvents")
+//    @SchedulerLock(name = "publishOrderEvents")
     public void publishOrderEvents() {
-        LockAssert.assertLocked();
+//        LockAssert.assertLocked();
         log.info("Publishing Order Events at {}", Instant.now());
         orderEventService.publishOrderEvents();
     }
