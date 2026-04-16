@@ -383,3 +383,31 @@ Inbox → “Event will not be processed twice”
 Saga → “Multi-step operations stay consistent”
 
 
+### Shedlock
+ShedLock is a Java library for Spring Boot that provides distributed locking for scheduled tasks.
+Only one instance of a scheduled job runs in a distributed environment.
+
+##### The problem it solves
+-In a simple Spring Boot app, you might use @Scheduled to run jobs (cron jobs, background tasks, etc.). That works fine on a single instance.
+-But if you scale your app (e.g., multiple pods in Kubernetes or multiple servers), each instance will run the same scheduled job, which can cause:
+-Duplicate processing , Data corruption , Performance issues.
+
+###### ⚙️ How ShedLock works
+2. [ ] Uses a shared storage (DB, Redis, etc.)
+3. [ ] Before executing a task:
+4. [ ] Tries to acquire a lock
+5. [ ] If lock is acquired → task runs
+6. [ ] If not → task is skipped explain in detail
+
+**Distributed locking** is a mechanism that ensures only one process/thread across multiple systems executes a critical section at a time.
+
+`@Scheduled(cron = "0 0/5 * * * ?")
+@SchedulerLock(name = "myTask", lockAtMostFor = "10m", lockAtLeastFor = "1m")
+public void runTask() {
+// your logic here
+}`
+- lockAtMostFor: Maximum time the lock will be held (safety in case the app crashes)
+- lockAtLeastFor : Minimum time the lock is held (prevents rapid re-execution)
+- Supported lock providers ShedLock can use:JDBC, MongoDB, Redis, ZooKeeper
+- READ MORE: https://github.com/lukas-krecan/shedlock
+
