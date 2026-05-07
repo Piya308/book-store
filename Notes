@@ -379,3 +379,4 @@ public void runTask() {
 - Supported lock providers ShedLock can use:JDBC, MongoDB, Redis, ZooKeeper
 - READ MORE: https://github.com/lukas-krecan/shedlock
 
+
