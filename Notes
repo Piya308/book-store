@@ -5,7 +5,7 @@ management.endpoints.web.exposure.include=*
 #Actuators:
 Spring Boot Actuator is a built‑in module that gives you production‑ready monitoring and management tools for your application.
 In short:
-It exposes endpoints (like /actuator/health, /actuator/info, /actuator/metrics) that let you check the app’s health, environment, and performance.
+It exposes endpoints (like /actuator/health, /actuator/info, /actuator/metrics) that let you check the app’s health, envirffonment, and performance.
 It helps with observability: you can see memory usage, request counts, database connectivity, and more.
 It supports integration with monitoring tools (Prometheus, Micrometer, etc.), so you can collect metrics automatically.
 You control which endpoints are visible using properties like:
